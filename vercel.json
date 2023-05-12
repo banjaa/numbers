@@ -3,9 +3,14 @@
   "regions": ["icn1"],
   "builds": [
       {
-          "src": "./index.js",
+          "src": "index.js",
           "use": "@vercel/node"
       }
   ],
-    "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ]
 }
