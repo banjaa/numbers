@@ -4,31 +4,20 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const request = require("supertest");
 
-exports.CreateProject = async (req) => {
-  const { url, title, word, classname, user_id } = req.body;
-  const comments = [];
-  const likes = 0;
-  const findClassId = await Class.findOne({classname: classname})
-  const class_id = findClassId._id;
-  const result = await new Project({
-    user_id: user_id,
-    url: url,
-    title: title,
-    word: word,
-    classname: classname,
-    class_id: class_id,
-    comments: comments,
-    likes: likes
-  }).save();
-  console.log(result);
-  return result;
-};
-
 exports.ProjectDelete = async (req) => {
   const { project_id } = req.params;
   const objId = new mongoose.Types.ObjectId(project_id);
   const result = await Project.findById({ _id: objId });
   const resulto = await Project.findByIdAndRemove(result);
+  const findClass = await Class.findOne({projects : {project_id: project_id}})
+  class_id = findClass._id
+  console.log(findClass);
+  await Class.updateOne({_id: class_id}, {
+    $pull: {
+      projects: {project_id: project_id}
+    }
+  })
+
   return resulto;
 };
 
@@ -36,6 +25,18 @@ exports.GetProjectById = async (req) => {
   const { project_id } = req.params;
   const objId = new mongoose.Types.ObjectId(project_id);
   const result = await Project.findById({ _id: objId });
+  return result;
+};
+
+exports.GetProjectByClassId = async (req) => {
+  const { class_id } = req.params;
+  const result = await Project.find({ class_id: class_id });
+  return result;
+};
+
+exports.GetProjectByUserId = async (req) => {
+  const { user_id } = req.params;
+  const result = await Project.find({ user_id: user_id }).sort({_id: -1});
   return result;
 };
 
