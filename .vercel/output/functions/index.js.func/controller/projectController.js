@@ -1,5 +1,6 @@
 const Project = require("../database/model/project");
 const Class= require("../database/model/class");
+const User = require("../database/model/users");
 const bcrypt = require("bcrypt");
 
 const {
@@ -49,9 +50,11 @@ exports.ProjectPostController = async (req, res) => {
   const comments = [];
   const likes = 0;
   const findClass = await Class.findOne({classname: classname})
-  console.log(findClass);
   const class_id = findClass._id;
+  const findUser = await User.findOne({_id: user_id})
+  const username = findUser.username;
   let isMember = "false"
+  
   if(findClass.admin == user_id) {
     isMember = "true"
   } else {
@@ -72,7 +75,8 @@ exports.ProjectPostController = async (req, res) => {
       img_url: img_url,
       class_id: class_id,
       comments: comments,
-      likes: likes
+      likes: likes,
+      username: username,
     }).save();
 
     const project_id = result._id;

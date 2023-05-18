@@ -5,22 +5,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const request = require("supertest");
 
-exports.CreateClass = async (req) => {
-  const { classname, password } = req.body;
-  const { admin } = req.params
-  const members = [];
-  const projects = []
-  const result = await new Class({
-   classname: classname,
-   password : password,
-   members: members,
-   admin: admin,
-   projects: projects
-  }).save();
-  console.log(result);
-  return result;
-};
-
 exports.getClassByAdmin = async (req) => {
   const { admin } = req.params;
   result = findClass = await Class.find({admin: admin})
@@ -76,7 +60,7 @@ exports.MemberAdder = async (req, res) => {
     username: Username
   }
 
-  const resulto = await Class.findOneAndUpdate(
+  await Class.findOneAndUpdate(
     { _id: class_id },
     { $push: { members: Member } },
     { new: true }

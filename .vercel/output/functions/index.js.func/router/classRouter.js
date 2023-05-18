@@ -11,7 +11,8 @@ const {
   GetMembersController,
   KickMemberController,
   GetClassByAdmin,
-  GetClassByUserId
+  GetClassByUserId,
+  GetClassByMember
 } = require("../controller/classController");
 
 const ClassRouter = express
@@ -26,5 +27,6 @@ const ClassRouter = express
   .put("/member/:class_id", MemberAdderController)
   .get("/get_project/:class_id", GetProjectsController)
   .get("/get_members/:class_id", GetMembersController)
+  .get("/classby_member/:member_id", GetClassByMember)
   .delete("/member/:class_id/:member_id", KickMemberController)
 module.exports = ClassRouter;

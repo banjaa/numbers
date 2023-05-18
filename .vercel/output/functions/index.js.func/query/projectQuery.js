@@ -36,7 +36,7 @@ exports.GetProjectByClassId = async (req) => {
 
 exports.GetProjectByUserId = async (req) => {
   const { user_id } = req.params;
-  const result = await Project.find({ user_id: user_id });
+  const result = await Project.find({ user_id: user_id }).sort({_id: -1});
   return result;
 };
 

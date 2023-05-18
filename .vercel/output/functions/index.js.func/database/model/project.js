@@ -32,6 +32,10 @@ const Project = new mongoose.Schema({
     type: String,
     required: true
   },
+  username: {
+    type: String,
+    required: true
+  },
   comments: {
     type: Array,
     required: true

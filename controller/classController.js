@@ -1,4 +1,5 @@
 const Class= require("../database/model/class");
+const User = require("../database/model/users");
 
 const {
   CreateClass,
@@ -20,7 +21,8 @@ exports.ClassGetController = async (req, res) => {
 };
 
 exports.GetClassByAdmin = async (req, res) => {
-  const result = await Class.find().sort({_id: -1});
+  const {admin} = req.params;
+  const result = await Class.find({admin: admin}).sort({_id: -1});
   res.status(201).send({ data: result });
 };
 
@@ -43,11 +45,26 @@ exports.ClassGetControllerById = async (req, res) => {
 };
 
 exports.ClassPostController = async (req, res) => {
-  try {
-    await CreateClass(req);
-    res.status(201).send(" Successfully created new Class");
-  } catch (err) {
-    res.send(err.message);
+  const { classname, password } = req.body;
+  const { admin } = req.params
+  const members = [];
+  const projects = []
+  const findUser = await User.findOne({_id: admin})
+  const admin_name = findUser.username
+  const findClass = await Class.findOne({classname: classname})
+  if(findClass) {
+    res.send("this class name is allready in use")
+  } else {
+    const result = await new Class({
+   classname: classname,
+   password : password,
+   members: members,
+   admin: admin,
+   admin_name: admin_name,
+   projects: projects
+  }).save();
+  console.log(result);
+  res.send("succesfully added new class")
   }
 };
 
@@ -106,3 +123,17 @@ exports.KickMemberController = async (req, res) => {
     res.send(err.message);
   }
 };
+
+exports.GetClassByMember = async (req, res) => {
+  const {member_id} = req.params;
+  const arr = [];
+  const Classes = await Class.find();
+  for(let i = 0; i < Classes.length; i++) {
+    for(let j = 0; j < Classes[i].members.length; j++) {
+      if(Classes[i].members[j].id === member_id) {
+        arr.push(Classes[i])
+      }
+    }
+  }
+  res.send(arr)
+}

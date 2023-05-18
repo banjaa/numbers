@@ -5,14 +5,13 @@ const bcrypt = require("bcrypt");
 
 const {
   GetUserById,
-  CreateUser,
   UserDelete,
   UserUpdate,
   GetUserByEmail,
   LIkeProject,
   DisLIkeProject,
   CreateNumber,
-  GetUserByName
+  GetUserByName,
 } = require("../query/userQuery");
 
 exports.userGetControllerById = async (req, res) => {
@@ -145,3 +144,16 @@ exports.userLogin = async (req, res) => {
     // return "Invalid password or email"
   }
 };
+
+exports.IsLiked = async (req, res) => {
+  const { user_id, project_id } = req.params;
+  let isLiked = false
+  const findUser = await User.findOne({_id: user_id})
+  const liked = findUser.liked_projects
+  for(let i = 0; i < liked.length; i++) {
+    if(liked[i] == project_id) {
+      isLiked = true
+    }
+  }
+  res.send(isLiked)
+}

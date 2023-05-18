@@ -13,7 +13,8 @@ const {
   userLogin,
   CreateNumbers,
   getNumbers,
-  getUserByName
+  getUserByName,
+  IsLiked
 
 } = require("../controller/userController");
 const { LIkeProject } = require("../query/userQuery");
@@ -22,6 +23,7 @@ const UserRouter = express
   .Router()
   .get("/user", userGetController)
   .get("/number", getNumbers)
+  .get("/isliked/:user_id/:project_id", IsLiked)
   .post("/user", userPostController)
   .post("/number", CreateNumbers)
   .get("/user/:user_id", userGetControllerById)
